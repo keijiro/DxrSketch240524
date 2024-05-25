@@ -14,7 +14,7 @@ public sealed class InstancedRenderer : MonoBehaviour, ITimeControl, IPropertyPr
     public Mesh[] Meshes { get; set; }
 
     [field:SerializeField]
-    public Material Material { get; set; }
+    public Material[] Materials { get; set; }
 
     [field:SerializeField]
     public float Time { get; set; }
@@ -52,7 +52,7 @@ public sealed class InstancedRenderer : MonoBehaviour, ITimeControl, IPropertyPr
         if (_pool == null) _pool = new InstancePool();
         _pool.Capacity = LayouterComponent.InstanceCount;
         _pool.Meshes = Meshes;
-        _pool.Material = Material;
+        _pool.Materials = Materials;
         _pool.RandomSeed = LayouterComponent.Seed;
         LayouterComponent.ScheduleJob(_pool.Xforms).Complete();
     }

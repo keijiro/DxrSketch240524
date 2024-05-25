@@ -19,8 +19,8 @@ public class InstancePool : IDisposable
     public ReadOnlySpan<Mesh> Meshes
       { get => _meshes; set => ResetMeshes(value); }
 
-    public Material Material
-      { get => _material; set => ResetMaterial(value); }
+    public ReadOnlySpan<Material> Materials
+      { get => _materials; set => ResetMaterials(value); }
 
     public uint RandomSeed
       { get => _randomSeed; set => ResetRandomSeed(value); }
@@ -50,7 +50,7 @@ public class InstancePool : IDisposable
     List<GameObject> _instances = new List<GameObject>();
 
     Mesh[] _meshes = new Mesh[] { null };
-    Material _material;
+    Material[] _materials = new Material[] { null };
     uint _randomSeed = 1;
     int _layer;
 
@@ -72,7 +72,7 @@ public class InstancePool : IDisposable
         go.GetComponent<MeshFilter>().sharedMesh = GetMeshForIndex(i);
 
         var rend = go.GetComponent<MeshRenderer>();
-        rend.sharedMaterial = _material;
+        rend.sharedMaterial = GetMaterialForIndex(i);
         rend.SetPropertyBlock(_mpblock);
 
         _instances.Add(go);
@@ -128,10 +128,24 @@ public class InstancePool : IDisposable
         return true;
     }
 
+    bool CompareMaterials(ReadOnlySpan<Material> materials)
+    {
+        if (_materials.Length != materials.Length) return false;
+        for (var i = 0; i < _materials.Length; i++)
+            if (_materials[i] != materials[i]) return false;
+        return true;
+    }
+
     Mesh GetMeshForIndex(int i)
     {
-        var rand = Random.CreateFromIndex(RandomSeed ^ (uint)i);
+        var rand = Random.CreateFromIndex(RandomSeed ^ 0xcbd ^ (uint)i);
         return _meshes[rand.NextInt(_meshes.Length)];
+    }
+
+    Material GetMaterialForIndex(int i)
+    {
+        var rand = Random.CreateFromIndex(RandomSeed ^ 0x5a3 ^ (uint)i);
+        return _materials[rand.NextInt(_materials.Length)];
     }
 
     void ResetMeshes(ReadOnlySpan<Mesh> meshes)
@@ -141,21 +155,23 @@ public class InstancePool : IDisposable
         ResetRandomSeed();
     }
 
+    void ResetMaterials(ReadOnlySpan<Material> materials)
+    {
+        if (CompareMaterials(materials)) return;
+        _materials = materials.ToArray();
+        ResetRandomSeed();
+    }
+
     void ResetRandomSeed(uint? seed = null)
     {
         if (_randomSeed == seed) return;
         if (seed != null) _randomSeed = (uint)seed;
         for (var i = 0; i < _instances.Count; i++)
-            _instances[i].GetComponent<MeshFilter>().sharedMesh
-              = GetMeshForIndex(i);
-    }
-
-    void ResetMaterial(Material m)
-    {
-        if (_material == m) return;
-        _material = m;
-        foreach (var go in _instances)
-            go.GetComponent<MeshRenderer>().sharedMaterial = m;
+        {
+            var t = _instances[i];
+            t.GetComponent<MeshFilter>().sharedMesh = GetMeshForIndex(i);
+            t.GetComponent<MeshRenderer>().sharedMaterial = GetMaterialForIndex(i);
+        }
     }
 
     void ResetLayer(int layer)
