@@ -12,9 +12,10 @@ namespace Sketch {
 public struct StackConfig
 {
     public uint Seed;
+    public float2 Height;
 
     public static StackConfig Default()
-      => new StackConfig() { Seed = 1 };
+      => new StackConfig() { Seed = 1, Height = math.float2(0.2f, 0.4f) };
 }
 
 #endregion
@@ -52,8 +53,8 @@ public struct StackXformJob : IJobParallelForTransform
     public void Execute(int index, TransformAccess xform)
     {
         var e = Elements[index];
-        xform.localPosition = e.Position;
-        xform.localScale = e.Size;
+        xform.localPosition = e.Position.xzy;
+        xform.localScale = e.Size.xzy;
     }
 }
 
