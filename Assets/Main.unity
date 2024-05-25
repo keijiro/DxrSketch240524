@@ -757,6 +757,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Config:
     Seed: 1
+    Level:
+      x: 4
+      y: 12
+    Height:
+      x: 0.01
+      y: 0.04
+    Shrink: 0.98
 --- !u!1 &2116485665
 GameObject:
   m_ObjectHideFlags: 0

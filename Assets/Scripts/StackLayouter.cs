@@ -40,21 +40,33 @@ public sealed class StackLayouter : MonoBehaviour, IInstanceLayouter
 
         void AddElement(float3 center, float2 extent, int level)
         {
-            if (++level >= 4) return;
+            if (++level >= rand.RangeXY(Config.Level)) return;
 
             var h = rand.RangeXY(Config.Height);
 
-            var p = center + math.float3(0, 0, h * 0.5f);
-            var s = math.float3(extent, h);
-            buffer.Add(new StackElement(p, s));
+            {
+                var pos = center + math.float3(0, 0, h * 0.5f);
+                var size = math.float3(extent, h);
+                buffer.Add(new StackElement(pos, size));
+            }
 
-            var c2 = p + math.float3(0, 0, h * 0.5f);
-            var e2 = extent * 0.48f;
-            var offs = math.float3(extent, 0) * 0.25f;
-            AddElement(c2 + offs * math.float3(-1, -1, 1), e2, level);
-            AddElement(c2 + offs * math.float3(+1, -1, 1), e2, level);
-            AddElement(c2 + offs * math.float3(-1, +1, 1), e2, level);
-            AddElement(c2 + offs * math.float3(+1, +1, 1), e2, level);
+            var ratio1 = rand.NextFloat(0.2f, 0.8f);
+            var ratio2a = rand.NextFloat(0.2f, 0.8f);
+            var ratio2b = rand.NextFloat(0.2f, 0.8f);
+
+            var origin = center + math.float3(-0.5f * extent, h);
+
+            var ext1 = extent * math.float2(    ratio1,     ratio2a);
+            var ext2 = extent * math.float2(    ratio1, 1 - ratio2a);
+            var ext3 = extent * math.float2(1 - ratio1,     ratio2b);
+            var ext4 = extent * math.float2(1 - ratio1, 1 - ratio2b);
+
+            var shrink = Config.Shrink;
+
+            AddElement(origin + math.float3(         ext1.x * 0.5f,          ext1.y * 0.5f, 0), ext1 * shrink, level);
+            AddElement(origin + math.float3(         ext2.x * 0.5f, ext1.y + ext2.y * 0.5f, 0), ext2 * shrink, level);
+            AddElement(origin + math.float3(ext1.x + ext3.x * 0.5f,          ext3.y * 0.5f, 0), ext3 * shrink, level);
+            AddElement(origin + math.float3(ext1.x + ext4.x * 0.5f, ext3.y + ext4.y * 0.5f, 0), ext4 * shrink, level);
         }
 
         AddElement(math.float3(0, 0, 0), math.float2(1, 1), 0);

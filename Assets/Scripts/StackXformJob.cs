@@ -12,10 +12,16 @@ namespace Sketch {
 public struct StackConfig
 {
     public uint Seed;
+    public int2 Level;
     public float2 Height;
+    public float Shrink;
 
     public static StackConfig Default()
-      => new StackConfig() { Seed = 1, Height = math.float2(0.2f, 0.4f) };
+      => new StackConfig()
+           { Seed = 1,
+             Level = math.int2(4, 8),
+             Height = math.float2(0.2f, 0.4f),
+             Shrink = 0.95f };
 }
 
 #endregion

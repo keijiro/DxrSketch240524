@@ -23,7 +23,10 @@ public static class SketchUtils
       => rand.NextFloat(0.0f, 1.0f);
 
     public static float RangeXY(ref this Random rand, float2 minmax)
-      => math.lerp(minmax.x, minmax.y, rand.UNorm());
+      => rand.NextFloat(minmax.x, minmax.y);
+
+    public static int RangeXY(ref this Random rand, int2 minmax)
+      => rand.NextInt(minmax.x, minmax.y);
 }
 
 } // namespace Sketch
