@@ -40,8 +40,6 @@ public sealed class StackLayouter : MonoBehaviour, IInstanceLayouter
 
         void AddElement(float3 center, float2 extent, int level)
         {
-            if (++level >= rand.RangeXY(Config.Level)) return;
-
             var h = rand.RangeXY(Config.Height);
 
             {
@@ -50,11 +48,41 @@ public sealed class StackLayouter : MonoBehaviour, IInstanceLayouter
                 buffer.Add(new StackElement(pos, size));
             }
 
+            if (math.min(extent.x, extent.y) < Config.Cutoff) return;
+            if (++level >= rand.RangeXY(Config.Level)) return;
+
+            center.z += h;
+
+            if (rand.NextFloat() < 0.8f)
+                AddUnpropSubElement(center, extent, level);
+            else
+                AddPropSubElement(center, extent, level);
+        }
+
+        void AddPropSubElement(float3 center, float2 extent, int level)
+        {
+            var div = math.int2((int)math.lerp(1, 8, math.pow(rand.NextFloat(), 4)),
+                                (int)math.lerp(1, 8, math.pow(rand.NextFloat(), 4)));
+
+            var origin = center + math.float3(-0.5f * extent, 0);
+            var ext = extent / div;
+
+            for (var i = 0; i < div.x; i++)
+            {
+                for (var j = 0; j < div.y; j++)
+                {
+                    AddElement(math.float3(origin.xy + ext * (math.float2(i, j) + 0.5f), origin.z), ext * Config.Shrink, level);
+                }
+            }
+        }
+
+        void AddUnpropSubElement(float3 center, float2 extent, int level)
+        {
             var ratio1 = rand.NextFloat(0.2f, 0.8f);
             var ratio2a = rand.NextFloat(0.2f, 0.8f);
             var ratio2b = rand.NextFloat(0.2f, 0.8f);
 
-            var origin = center + math.float3(-0.5f * extent, h);
+            var origin = center + math.float3(-0.5f * extent, 0);
 
             var ext1 = extent * math.float2(    ratio1,     ratio2a);
             var ext2 = extent * math.float2(    ratio1, 1 - ratio2a);
@@ -69,7 +97,7 @@ public sealed class StackLayouter : MonoBehaviour, IInstanceLayouter
             AddElement(origin + math.float3(ext1.x + ext4.x * 0.5f, ext3.y + ext4.y * 0.5f, 0), ext4 * shrink, level);
         }
 
-        AddElement(math.float3(0, 0, 0), math.float2(1, 1), 0);
+        AddElement(math.float3(0, 0, 0), math.float2(3, 3), 0);
 
         _elements = new NativeArray<StackElement>(buffer.ToArray(), Allocator.Persistent);
     }

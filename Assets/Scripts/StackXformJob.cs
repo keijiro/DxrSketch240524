@@ -15,13 +15,15 @@ public struct StackConfig
     public int2 Level;
     public float2 Height;
     public float Shrink;
+    public float Cutoff;
 
     public static StackConfig Default()
       => new StackConfig()
            { Seed = 1,
              Level = math.int2(4, 8),
              Height = math.float2(0.2f, 0.4f),
-             Shrink = 0.95f };
+             Shrink = 0.95f,
+             Cutoff = 0.01f };
 }
 
 #endregion
