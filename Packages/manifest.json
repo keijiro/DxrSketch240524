@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "com.unity.render-pipelines.high-definition": "17.0.3",
+    "com.unity.timeline": "1.8.6"
+  },
+  "scopedRegistries": [
+    {
+      "name": "Keijiro",
+      "url": "https://registry.npmjs.com",
+      "scopes": [
+        "jp.keijiro"
+      ]
+    }
+  ]
+}
