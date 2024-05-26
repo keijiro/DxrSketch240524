@@ -40,6 +40,8 @@ public sealed class StackLayouter : MonoBehaviour, IInstanceLayouter
 
         void AddElement(float3 center, float2 extent, int level)
         {
+            if (math.min(extent.x, extent.y) < Config.Cutoff) return;
+
             var h = rand.RangeXYPow(Config.Height);
 
             {
@@ -48,7 +50,6 @@ public sealed class StackLayouter : MonoBehaviour, IInstanceLayouter
                 buffer.Add(new StackElement(pos, size));
             }
 
-            if (math.min(extent.x, extent.y) < Config.Cutoff) return;
             if (++level >= rand.RangeXY(Config.Level)) return;
 
             center.z += h;
@@ -65,13 +66,13 @@ public sealed class StackLayouter : MonoBehaviour, IInstanceLayouter
                                 (int)math.lerp(1, 8, math.pow(rand.NextFloat(), 4)));
 
             var origin = center + math.float3(-0.5f * extent, 0);
-            var ext = extent / div;
+            var ext = extent / div - rand.RangeXYPow(Config.Shrink);
 
             for (var i = 0; i < div.x; i++)
             {
                 for (var j = 0; j < div.y; j++)
                 {
-                    AddElement(math.float3(origin.xy + ext * (math.float2(i, j) + 0.5f), origin.z), ext * Config.Shrink, level);
+                    AddElement(math.float3(origin.xy + ext * (math.float2(i, j) + 0.5f), origin.z), ext, level);
                 }
             }
         }
@@ -89,12 +90,12 @@ public sealed class StackLayouter : MonoBehaviour, IInstanceLayouter
             var ext3 = extent * math.float2(1 - ratio1,     ratio2b);
             var ext4 = extent * math.float2(1 - ratio1, 1 - ratio2b);
 
-            var shrink = Config.Shrink;
+            var shrink = rand.RangeXYPow(Config.Shrink);
 
-            AddElement(origin + math.float3(         ext1.x * 0.5f,          ext1.y * 0.5f, 0), ext1 * shrink, level);
-            AddElement(origin + math.float3(         ext2.x * 0.5f, ext1.y + ext2.y * 0.5f, 0), ext2 * shrink, level);
-            AddElement(origin + math.float3(ext1.x + ext3.x * 0.5f,          ext3.y * 0.5f, 0), ext3 * shrink, level);
-            AddElement(origin + math.float3(ext1.x + ext4.x * 0.5f, ext3.y + ext4.y * 0.5f, 0), ext4 * shrink, level);
+            AddElement(origin + math.float3(         ext1.x * 0.5f,          ext1.y * 0.5f, 0), ext1 - shrink, level);
+            AddElement(origin + math.float3(         ext2.x * 0.5f, ext1.y + ext2.y * 0.5f, 0), ext2 - shrink, level);
+            AddElement(origin + math.float3(ext1.x + ext3.x * 0.5f,          ext3.y * 0.5f, 0), ext3 - shrink, level);
+            AddElement(origin + math.float3(ext1.x + ext4.x * 0.5f, ext3.y + ext4.y * 0.5f, 0), ext4 - shrink, level);
         }
 
         AddElement(math.float3(0, 0, 0), math.float2(3, 3), 0);

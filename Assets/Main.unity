@@ -1017,7 +1017,10 @@ MonoBehaviour:
       x: 0.005
       y: 0.06
       z: 8
-    Shrink: 0.98
+    Shrink:
+      x: 0.0002
+      y: 0.008
+      z: 4
     Cutoff: 0.015
     Split: 0.5
 --- !u!1 &1801496268

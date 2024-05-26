@@ -14,7 +14,7 @@ public struct StackConfig
     public uint Seed;
     public int2 Level;
     public float3 Height;
-    public float Shrink;
+    public float3 Shrink;
     public float Cutoff;
     public float Split;
 
@@ -23,7 +23,7 @@ public struct StackConfig
            { Seed = 1,
              Level = math.int2(4, 8),
              Height = math.float3(0.2f, 0.4f, 2),
-             Shrink = 0.95f,
+             Shrink = math.float3(0.001f, 0.002f, 2),
              Cutoff = 0.01f,
              Split = 0.5f };
 }
