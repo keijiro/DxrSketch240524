@@ -13,17 +13,19 @@ public struct StackConfig
 {
     public uint Seed;
     public int2 Level;
-    public float2 Height;
+    public float3 Height;
     public float Shrink;
     public float Cutoff;
+    public float Split;
 
     public static StackConfig Default()
       => new StackConfig()
            { Seed = 1,
              Level = math.int2(4, 8),
-             Height = math.float2(0.2f, 0.4f),
+             Height = math.float3(0.2f, 0.4f, 2),
              Shrink = 0.95f,
-             Cutoff = 0.01f };
+             Cutoff = 0.01f,
+             Split = 0.5f };
 }
 
 #endregion

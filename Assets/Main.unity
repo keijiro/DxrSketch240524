@@ -1011,13 +1011,15 @@ MonoBehaviour:
   Config:
     Seed: 32849
     Level:
-      x: 6
-      y: 16
+      x: 15
+      y: 20
     Height:
-      x: 0.01
-      y: 0.04
+      x: 0.005
+      y: 0.06
+      z: 8
     Shrink: 0.98
     Cutoff: 0.015
+    Split: 0.5
 --- !u!1 &1801496268
 GameObject:
   m_ObjectHideFlags: 0

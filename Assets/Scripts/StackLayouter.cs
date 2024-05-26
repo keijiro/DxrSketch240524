@@ -40,7 +40,7 @@ public sealed class StackLayouter : MonoBehaviour, IInstanceLayouter
 
         void AddElement(float3 center, float2 extent, int level)
         {
-            var h = rand.RangeXY(Config.Height);
+            var h = rand.RangeXYPow(Config.Height);
 
             {
                 var pos = center + math.float3(0, 0, h * 0.5f);
@@ -53,7 +53,7 @@ public sealed class StackLayouter : MonoBehaviour, IInstanceLayouter
 
             center.z += h;
 
-            if (rand.NextFloat() < 0.8f)
+            if (rand.NextFloat() < Config.Split)
                 AddUnpropSubElement(center, extent, level);
             else
                 AddPropSubElement(center, extent, level);
