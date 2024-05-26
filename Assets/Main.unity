@@ -1009,7 +1009,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Config:
-    Seed: 32849
+    Seed: 32525
     Level:
       x: 15
       y: 20

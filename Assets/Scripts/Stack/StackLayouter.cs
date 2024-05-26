@@ -5,6 +5,7 @@ using Unity.Jobs;
 
 namespace Sketch {
 
+[ExecuteInEditMode]
 public sealed class StackLayouter : MonoBehaviour, IInstanceLayouter
 {
     #region Editable properties
@@ -16,20 +17,28 @@ public sealed class StackLayouter : MonoBehaviour, IInstanceLayouter
 
     #region IInstanceLayouter implementation
 
-    public int InstanceCount => _elements.Length;
+    public int InstanceCount => Elements.Length;
     public uint Seed => Config.Seed;
 
     public JobHandle ScheduleJob(TransformAccessArray xforms)
-      => StackXformJob.Schedule(Config, _elements, xforms);
+      => StackXformJob.Schedule(Config, Elements, xforms);
+
+    #endregion
+
+    #region Element array and lazy initializer
+
+    NativeArray<StackElement> Elements
+      => _elements.IsCreated ? _elements
+           : (_elements = StackBuilder.CreateElementArray(Config));
+
+    NativeArray<StackElement> _elements;
 
     #endregion
 
     #region MonoBehaviour implementation
 
-    NativeArray<StackElement> _elements;
-
-    void Start()
-      => _elements = StackBuilder.CreateElementArray(Config);
+    void OnValidate()
+      => _elements.Dispose();
 
     void OnDestroy()
       => _elements.Dispose();
