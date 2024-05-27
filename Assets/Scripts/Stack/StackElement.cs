@@ -19,6 +19,7 @@ public struct StackConfig
     public float3 Height;
     public float3 Shrink;
     public float Cutoff;
+    public float Decimate;
     public float Split;
 
     public static StackConfig Default()
@@ -28,6 +29,7 @@ public struct StackConfig
              Height = math.float3(0.2f, 0.4f, 2),
              Shrink = math.float3(0.001f, 0.002f, 2),
              Cutoff = 0.01f,
+             Decimate = 0,
              Split = 0.5f };
 }
 
@@ -66,6 +68,7 @@ public static class StackBuilder
 
             var h = rand.RangeXYPow(config.Height);
 
+            if (rand.UNorm() >= config.Decimate)
             {
                 var pos = center + math.float3(0, 0, h * 0.5f);
                 var size = math.float3(extent, h);
