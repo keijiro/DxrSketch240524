@@ -14,14 +14,14 @@ public struct ScatterConfig
 {
     public int InstanceCount;
     public float3 Extent;
-    public float Size;
+    public float3 Scale;
     public uint Seed;
 
     public static ScatterConfig Default()
       => new ScatterConfig()
            { InstanceCount = 10,
              Extent = math.float3(1, 1, 1),
-             Size = 0.1f,
+             Scale = 0.1f,
              Seed = 1 };
 }
 
@@ -49,7 +49,7 @@ public struct ScatterXformJob : IJobParallelForTransform
         var p = (rand.NextFloat3() - 0.5f) * Config.Extent;
         xform.localPosition = math.transform(Parent, p);
         xform.localRotation = math.rotation(Parent.rs);
-        xform.localScale = (float3)Config.Size;
+        xform.localScale = Config.Scale;
     }
 }
 

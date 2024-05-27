@@ -944,7 +944,10 @@ MonoBehaviour:
       x: 3
       y: 0
       z: 3
-    Size: 0.0025
+    Scale:
+      x: 0.002
+      y: 0.02
+      z: 0.002
     Seed: 389
 --- !u!114 &1977241133
 MonoBehaviour:
