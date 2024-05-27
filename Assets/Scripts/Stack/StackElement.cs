@@ -1,3 +1,4 @@
+using UnityEngine;
 using UnityEngine.Jobs;
 using Unity.Burst;
 using Unity.Collections;
@@ -133,18 +134,24 @@ public static class StackBuilder
 public struct StackXformJob : IJobParallelForTransform
 {
     public StackConfig Config;
+    public AffineTransform Parent;
     public NativeArray<StackElement> Elements;
 
     public static JobHandle Schedule(in StackConfig config,
                                      NativeArray<StackElement> elements,
+                                     Transform parent,
                                      TransformAccessArray xforms)
       => new StackXformJob()
-           { Config = config, Elements = elements }.Schedule(xforms);
+           { Config = config,
+             Elements = elements,
+             Parent = SketchUtils.AffineTransform(parent) }.Schedule(xforms);
 
     public void Execute(int index, TransformAccess xform)
     {
         var e = Elements[index];
-        xform.localPosition = e.Position.xzy;
+        var scale = math.length(math.mul(Parent, math.float4(1, 0, 0, 0)));
+        xform.localPosition = math.transform(Parent, e.Position.xzy);
+        xform.localRotation = math.rotation(Parent.rs);
         xform.localScale = e.Size.xzy;
     }
 }

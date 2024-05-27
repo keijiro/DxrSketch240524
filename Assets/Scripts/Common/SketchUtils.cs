@@ -16,6 +16,9 @@ public static class SketchUtils
     public static NativeArray<T> NewTempJobArray<T>(int count) where T : struct
       => new NativeArray<T>(count, Allocator.TempJob, NativeArrayOptions.UninitializedMemory);
 
+    public static AffineTransform AffineTransform(in Transform xform)
+      => new AffineTransform(xform.position, xform.rotation, xform.localScale);
+
     public static float SNorm(ref this Random rand)
       => rand.NextFloat(-0.5f, 0.5f);
 
