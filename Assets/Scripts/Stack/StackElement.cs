@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Jobs;
-using UnityEngine.Serialization;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
@@ -18,7 +17,7 @@ public struct StackConfig
     public uint Seed;
     public int2 Level;
     public float3 Height;
-    public float3 Margin;
+    public float3 Pad;
     public float Cutoff;
     public float Decimate;
     public float Uniformity;
@@ -30,7 +29,7 @@ public struct StackConfig
            { Seed = 1,
              Level = math.int2(4, 8),
              Height = math.float3(0.2f, 0.4f, 2),
-             Margin = math.float3(0.001f, 0.002f, 2),
+             Pad = math.float3(0.001f, 0.002f, 2),
              Cutoff = 0.01f,
              Decimate = 0,
              Uniformity = 0.5f,
@@ -123,7 +122,7 @@ public class StackBuilder
         pos.xy -= ext / 2;
         ext /= div;
 
-        var size = ext - _rand.RangeXYPow(_config.Margin);
+        var size = ext - _rand.RangeXYPow(_config.Pad);
 
         for (var i = 0; i < div.x; i++)
         {
@@ -140,21 +139,39 @@ public class StackBuilder
     {
         pos.xy -= ext / 2;
 
-        var r1  = _rand.NextFloat(0.2f, 0.8f);
-        var r2a = _rand.NextFloat(0.2f, 0.8f);
-        var r2b = _rand.NextFloat(0.2f, 0.8f);
+        var ratio1 = _rand.NextFloat(0.2f, 0.8f);
+        var ratio2 = _rand.NextFloat(0.2f, 0.8f);
+        var ratio3 = _rand.NextFloat(0.2f, 0.8f);
 
-        var s1 = ext * math.float2(    r1,     r2a);
-        var s2 = ext * math.float2(    r1, 1 - r2a);
-        var s3 = ext * math.float2(1 - r1,     r2b);
-        var s4 = ext * math.float2(1 - r1, 1 - r2b);
+        var (ext1, ext2, ext3, ext4) = (ext, ext, ext, ext);
 
-        var m = _rand.RangeXYPow(_config.Margin);
+        if (_rand.UNorm() < 0.5f)
+        {
+            ext1 *= math.float2(    ratio1,     ratio2);
+            ext2 *= math.float2(    ratio1, 1 - ratio2);
+            ext3 *= math.float2(1 - ratio1,     ratio3);
+            ext4 *= math.float2(1 - ratio1, 1 - ratio3);
+        }
+        else
+        {
+            ext1 *= math.float2(    ratio2,     ratio1);
+            ext2 *= math.float2(    ratio3, 1 - ratio1);
+            ext3 *= math.float2(1 - ratio2,     ratio1);
+            ext4 *= math.float2(1 - ratio3, 1 - ratio1);
+        }
 
-        AddElement(pos + math.float3(       s1.x / 2,        s1.y / 2, 0), s1 - m, level);
-        AddElement(pos + math.float3(       s2.x / 2, s1.y + s2.y / 2, 0), s2 - m, level);
-        AddElement(pos + math.float3(s1.x + s3.x / 2,        s3.y / 2, 0), s3 - m, level);
-        AddElement(pos + math.float3(s1.x + s4.x / 2, s3.y + s4.y / 2, 0), s4 - m, level);
+        var pos1 = pos.xy + math.float2(         ext1.x / 2,          ext1.y / 2);
+        var pos2 = pos.xy + math.float2(         ext2.x / 2, ext1.y + ext2.y / 2);
+        var pos3 = pos.xy + math.float2(ext1.x + ext3.x / 2,          ext3.y / 2);
+        var pos4 = pos.xy + math.float2(ext2.x + ext4.x / 2, ext3.y + ext4.y / 2);
+
+        var pad = _rand.RangeXYPow(_config.Pad);
+        var z = pos.z;
+
+        AddElement(math.float3(pos1, z), ext1 - pad, level);
+        AddElement(math.float3(pos2, z), ext2 - pad, level);
+        AddElement(math.float3(pos3, z), ext3 - pad, level);
+        AddElement(math.float3(pos4, z), ext4 - pad, level);
     }
 }
 
