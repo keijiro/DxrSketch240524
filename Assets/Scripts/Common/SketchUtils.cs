@@ -25,6 +25,9 @@ public static class SketchUtils
     public static float UNorm(ref this Random rand)
       => rand.NextFloat(0.0f, 1.0f);
 
+    public static float2 UNorm2(ref this Random rand)
+      => rand.NextFloat2(0.0f, 1.0f);
+
     public static float RangeXY(ref this Random rand, float2 minmax)
       => rand.NextFloat(minmax.x, minmax.y);
 
@@ -33,6 +36,9 @@ public static class SketchUtils
 
     public static float RangeXYPow(ref this Random rand, float3 minmaxpow)
       => math.lerp(minmaxpow.x, minmaxpow.y, math.pow(rand.UNorm(), minmaxpow.z));
+
+    public static float2 RangeXYPow2(ref this Random rand, float3 minmaxpow)
+      => math.lerp(minmaxpow.x, minmaxpow.y, math.pow(rand.UNorm2(), minmaxpow.z));
 
     public static int RangeXY(ref this Random rand, int2 minmax)
       => rand.NextInt(minmax.x, minmax.y);

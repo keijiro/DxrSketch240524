@@ -22,6 +22,7 @@ public struct StackConfig
     public float Cutoff;
     public float Decimate;
     public float Uniformity;
+    public int3 Subdivide;
     public int2 Grid;
 
     public static StackConfig Default()
@@ -33,6 +34,7 @@ public struct StackConfig
              Cutoff = 0.01f,
              Decimate = 0,
              Uniformity = 0.5f,
+             Subdivide = math.int3(1, 8, 4),
              Grid = math.int2(1, 1) };
 }
 
@@ -56,83 +58,103 @@ public struct StackElement
 
 #region Builder class
 
-public static class StackBuilder
+public class StackBuilder
 {
-    public static NativeArray<StackElement> CreateElementArray(StackConfig config)
+    // Constructor
+    public StackBuilder(in StackConfig config)
     {
-        var buffer = new List<StackElement>();
+        _config = config;
 
-        var rand = new Random(config.Seed);
-        rand.NextUInt();
+        _rand = new Random(config.Seed);
+        _rand.NextUInt();
 
-        void AddElement(float3 center, float2 extent, int level)
+        AddSubelementUniform((float3)0, math.float2(3, 3), 0, config.Grid);
+    }
+
+    // Native array generator
+    public NativeArray<StackElement> CreateNativeArray()
+      => new NativeArray<StackElement>(_buffer.ToArray(), Allocator.Persistent);
+
+    // Configuration
+    StackConfig _config;
+    Random _rand;
+
+    // Build buffer
+    List<StackElement> _buffer = new List<StackElement>();
+
+    // Recursive add-element method
+    void AddElement(float3 pos, float2 ext, int level)
+    {
+        // Extent based cutoff
+        if (math.min(ext.x, ext.y) < _config.Cutoff) return;
+
+        // Random height
+        var h = _rand.RangeXYPow(_config.Height);
+
+        // Element addition with decimation
+        if (_rand.UNorm() >= _config.Decimate)
         {
-            if (math.min(extent.x, extent.y) < config.Cutoff) return;
-
-            var h = rand.RangeXYPow(config.Height);
-
-            if (rand.UNorm() >= config.Decimate)
-            {
-                var pos = center + math.float3(0, 0, h * 0.5f);
-                var size = math.float3(extent, h);
-                buffer.Add(new StackElement(pos, size));
-            }
-
-            if (++level >= rand.RangeXY(config.Level)) return;
-
-            center.z += h;
-
-            if (rand.NextFloat() < config.Uniformity)
-            {
-                var div = math.int2((int)math.lerp(1, 8, math.pow(rand.NextFloat(), 4)),
-                                    (int)math.lerp(1, 8, math.pow(rand.NextFloat(), 4)));
-                AddPropSubElement(center, extent, level, div);
-            }
-            else
-            {
-                AddUnpropSubElement(center, extent, level);
-            }
+            var p = pos + math.float3(0, 0, h / 2);
+            var s = math.float3(ext, h);
+            _buffer.Add(new StackElement(p, s));
         }
 
-        void AddPropSubElement(float3 center, float2 extent, int level, int2 div)
-        {
-            var origin = center + math.float3(-0.5f * extent, 0);
-            var ext = extent / div - rand.RangeXYPow(config.Margin);
+        // Random termination
+        if (++level >= _rand.RangeXY(_config.Level)) return;
 
-            for (var i = 0; i < div.x; i++)
+        // Lift up
+        pos.z += h;
+
+        // Uniform / non-uniform split
+        if (_rand.NextFloat() < _config.Uniformity)
+        {
+            var div = (int2)_rand.RangeXYPow2(_config.Subdivide);
+            AddSubelementUniform(pos, ext, level, div);
+        }
+        else
+        {
+            AddSubelementNonUniform(pos, ext, level);
+        }
+    }
+
+    // Subelement (uniform, nxn)
+    void AddSubelementUniform(float3 pos, float2 ext, int level, int2 div)
+    {
+        pos.xy -= ext / 2;
+        ext /= div;
+
+        var size = ext - _rand.RangeXYPow(_config.Margin);
+
+        for (var i = 0; i < div.x; i++)
+        {
+            for (var j = 0; j < div.y; j++)
             {
-                for (var j = 0; j < div.y; j++)
-                {
-                    AddElement(math.float3(origin.xy + ext * (math.float2(i, j) + 0.5f), origin.z), ext, level);
-                }
+                var offs = ext * (math.float2(i, j) + 0.5f);
+                AddElement(math.float3(pos.xy + offs, pos.z), size, level);
             }
         }
+    }
 
-        void AddUnpropSubElement(float3 center, float2 extent, int level)
-        {
-            var ratio1 = rand.NextFloat(0.2f, 0.8f);
-            var ratio2a = rand.NextFloat(0.2f, 0.8f);
-            var ratio2b = rand.NextFloat(0.2f, 0.8f);
+    // Subelement (non-uniform, 2x2)
+    void AddSubelementNonUniform(float3 pos, float2 ext, int level)
+    {
+        pos.xy -= ext / 2;
 
-            var origin = center + math.float3(-0.5f * extent, 0);
+        var r1  = _rand.NextFloat(0.2f, 0.8f);
+        var r2a = _rand.NextFloat(0.2f, 0.8f);
+        var r2b = _rand.NextFloat(0.2f, 0.8f);
 
-            var ext1 = extent * math.float2(    ratio1,     ratio2a);
-            var ext2 = extent * math.float2(    ratio1, 1 - ratio2a);
-            var ext3 = extent * math.float2(1 - ratio1,     ratio2b);
-            var ext4 = extent * math.float2(1 - ratio1, 1 - ratio2b);
+        var s1 = ext * math.float2(    r1,     r2a);
+        var s2 = ext * math.float2(    r1, 1 - r2a);
+        var s3 = ext * math.float2(1 - r1,     r2b);
+        var s4 = ext * math.float2(1 - r1, 1 - r2b);
 
-            var shrink = rand.RangeXYPow(config.Margin);
+        var m = _rand.RangeXYPow(_config.Margin);
 
-            AddElement(origin + math.float3(         ext1.x * 0.5f,          ext1.y * 0.5f, 0), ext1 - shrink, level);
-            AddElement(origin + math.float3(         ext2.x * 0.5f, ext1.y + ext2.y * 0.5f, 0), ext2 - shrink, level);
-            AddElement(origin + math.float3(ext1.x + ext3.x * 0.5f,          ext3.y * 0.5f, 0), ext3 - shrink, level);
-            AddElement(origin + math.float3(ext1.x + ext4.x * 0.5f, ext3.y + ext4.y * 0.5f, 0), ext4 - shrink, level);
-        }
-
-        //AddElement(math.float3(0, 0, 0), math.float2(3, 3), 0);
-        AddPropSubElement((float3)0, math.float2(3, 3), 0, config.Grid);
-
-        return new NativeArray<StackElement>(buffer.ToArray(), Allocator.Persistent);
+        AddElement(pos + math.float3(       s1.x / 2,        s1.y / 2, 0), s1 - m, level);
+        AddElement(pos + math.float3(       s2.x / 2, s1.y + s2.y / 2, 0), s2 - m, level);
+        AddElement(pos + math.float3(s1.x + s3.x / 2,        s3.y / 2, 0), s3 - m, level);
+        AddElement(pos + math.float3(s1.x + s4.x / 2, s3.y + s4.y / 2, 0), s4 - m, level);
     }
 }
 

@@ -29,7 +29,7 @@ public sealed class StackLayouter : MonoBehaviour, IInstanceLayouter
 
     NativeArray<StackElement> Elements
       => _elements.IsCreated ? _elements
-           : (_elements = StackBuilder.CreateElementArray(Config));
+           : (_elements = (new StackBuilder(Config)).CreateNativeArray());
 
     NativeArray<StackElement> _elements;
 
