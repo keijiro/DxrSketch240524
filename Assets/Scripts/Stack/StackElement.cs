@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Jobs;
+using UnityEngine.Serialization;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
@@ -17,20 +18,22 @@ public struct StackConfig
     public uint Seed;
     public int2 Level;
     public float3 Height;
-    public float3 Shrink;
+    public float3 Margin;
     public float Cutoff;
     public float Decimate;
-    public float Split;
+    public float Uniformity;
+    public int2 Grid;
 
     public static StackConfig Default()
       => new StackConfig()
            { Seed = 1,
              Level = math.int2(4, 8),
              Height = math.float3(0.2f, 0.4f, 2),
-             Shrink = math.float3(0.001f, 0.002f, 2),
+             Margin = math.float3(0.001f, 0.002f, 2),
              Cutoff = 0.01f,
              Decimate = 0,
-             Split = 0.5f };
+             Uniformity = 0.5f,
+             Grid = math.int2(1, 1) };
 }
 
 #endregion
@@ -79,19 +82,22 @@ public static class StackBuilder
 
             center.z += h;
 
-            if (rand.NextFloat() < config.Split)
-                AddUnpropSubElement(center, extent, level);
+            if (rand.NextFloat() < config.Uniformity)
+            {
+                var div = math.int2((int)math.lerp(1, 8, math.pow(rand.NextFloat(), 4)),
+                                    (int)math.lerp(1, 8, math.pow(rand.NextFloat(), 4)));
+                AddPropSubElement(center, extent, level, div);
+            }
             else
-                AddPropSubElement(center, extent, level);
+            {
+                AddUnpropSubElement(center, extent, level);
+            }
         }
 
-        void AddPropSubElement(float3 center, float2 extent, int level)
+        void AddPropSubElement(float3 center, float2 extent, int level, int2 div)
         {
-            var div = math.int2((int)math.lerp(1, 8, math.pow(rand.NextFloat(), 4)),
-                                (int)math.lerp(1, 8, math.pow(rand.NextFloat(), 4)));
-
             var origin = center + math.float3(-0.5f * extent, 0);
-            var ext = extent / div - rand.RangeXYPow(config.Shrink);
+            var ext = extent / div - rand.RangeXYPow(config.Margin);
 
             for (var i = 0; i < div.x; i++)
             {
@@ -115,7 +121,7 @@ public static class StackBuilder
             var ext3 = extent * math.float2(1 - ratio1,     ratio2b);
             var ext4 = extent * math.float2(1 - ratio1, 1 - ratio2b);
 
-            var shrink = rand.RangeXYPow(config.Shrink);
+            var shrink = rand.RangeXYPow(config.Margin);
 
             AddElement(origin + math.float3(         ext1.x * 0.5f,          ext1.y * 0.5f, 0), ext1 - shrink, level);
             AddElement(origin + math.float3(         ext2.x * 0.5f, ext1.y + ext2.y * 0.5f, 0), ext2 - shrink, level);
@@ -123,7 +129,8 @@ public static class StackBuilder
             AddElement(origin + math.float3(ext1.x + ext4.x * 0.5f, ext3.y + ext4.y * 0.5f, 0), ext4 - shrink, level);
         }
 
-        AddElement(math.float3(0, 0, 0), math.float2(3, 3), 0);
+        //AddElement(math.float3(0, 0, 0), math.float2(3, 3), 0);
+        AddPropSubElement((float3)0, math.float2(3, 3), 0, config.Grid);
 
         return new NativeArray<StackElement>(buffer.ToArray(), Allocator.Persistent);
     }
