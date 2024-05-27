@@ -38,10 +38,13 @@ public sealed class StackLayouter : MonoBehaviour, IInstanceLayouter
     #region MonoBehaviour implementation
 
     void OnValidate()
-      => _elements.Dispose();
+      => _elements.SafeRelease();
 
     void OnDestroy()
-      => _elements.Dispose();
+      => _elements.SafeRelease();
+
+    void OnDisable()
+      => _elements.SafeRelease();
 
     #endregion
 }

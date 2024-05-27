@@ -19,6 +19,11 @@ public static class SketchUtils
     public static AffineTransform AffineTransform(in Transform xform)
       => new AffineTransform(xform.position, xform.rotation, xform.localScale);
 
+    public static void SafeRelease<T>(ref this NativeArray<T> array) where T : struct
+    {
+        if (array.IsCreated) array.Dispose();
+    }
+
     public static float SNorm(ref this Random rand)
       => rand.NextFloat(-0.5f, 0.5f);
 
