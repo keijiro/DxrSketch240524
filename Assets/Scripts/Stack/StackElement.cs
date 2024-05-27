@@ -14,7 +14,7 @@ namespace Sketch {
 [System.Serializable]
 public struct StackConfig
 {
-    public uint Seed;
+    public float2 Extent;
     public int2 Level;
     public float3 Height;
     public float3 Pad;
@@ -23,10 +23,11 @@ public struct StackConfig
     public float Uniformity;
     public int3 Subdivide;
     public int2 Grid;
+    public uint Seed;
 
     public static StackConfig Default()
       => new StackConfig()
-           { Seed = 1,
+           { Extent = math.float2(1, 1),
              Level = math.int2(4, 8),
              Height = math.float3(0.2f, 0.4f, 2),
              Pad = math.float3(0.001f, 0.002f, 2),
@@ -34,7 +35,8 @@ public struct StackConfig
              Decimate = 0,
              Uniformity = 0.5f,
              Subdivide = math.int3(1, 8, 4),
-             Grid = math.int2(1, 1) };
+             Grid = math.int2(1, 1),
+             Seed = 1 };
 }
 
 #endregion
@@ -44,12 +46,12 @@ public struct StackConfig
 public struct StackElement
 {
     public float3 Position;
-    public float3 Size;
+    public float3 Scale;
 
-    public StackElement(float3 position, float3 size)
+    public StackElement(float3 position, float3 scale)
     {
         Position = position;
-        Size = size;
+        Scale = scale;
     }
 }
 
@@ -67,7 +69,7 @@ public class StackBuilder
         _rand = new Random(config.Seed);
         _rand.NextUInt();
 
-        AddSubelementUniform((float3)0, math.float2(3, 3), 0, config.Grid);
+        AddSubelementUniform((float3)0, config.Extent, 0, config.Grid);
     }
 
     // Native array generator
@@ -122,14 +124,14 @@ public class StackBuilder
         pos.xy -= ext / 2;
         ext /= div;
 
-        var size = ext - _rand.RangeXYPow(_config.Pad);
+        var scale = ext - _rand.RangeXYPow(_config.Pad);
 
         for (var i = 0; i < div.x; i++)
         {
             for (var j = 0; j < div.y; j++)
             {
                 var offs = ext * (math.float2(i, j) + 0.5f);
-                AddElement(math.float3(pos.xy + offs, pos.z), size, level);
+                AddElement(math.float3(pos.xy + offs, pos.z), scale, level);
             }
         }
     }
@@ -201,7 +203,7 @@ public struct StackXformJob : IJobParallelForTransform
         var scale = math.length(math.mul(Parent, math.float4(1, 0, 0, 0)));
         xform.localPosition = math.transform(Parent, e.Position.xzy);
         xform.localRotation = math.rotation(Parent.rs);
-        xform.localScale = e.Size.xzy;
+        xform.localScale = e.Scale.xzy;
     }
 }
 

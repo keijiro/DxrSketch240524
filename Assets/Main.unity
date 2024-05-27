@@ -617,7 +617,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Config:
-    Seed: 12525432
+    Extent:
+      x: 3
+      y: 3
     Level:
       x: 15
       y: 20
@@ -639,6 +641,7 @@ MonoBehaviour:
     Grid:
       x: 1
       y: 1
+    Seed: 12525432
 --- !u!4 &1437881794
 Transform:
   m_ObjectHideFlags: 0
@@ -880,7 +883,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Config:
-    Seed: 252541
+    Extent:
+      x: 3
+      y: 3
     Level:
       x: 15
       y: 20
@@ -902,6 +907,7 @@ MonoBehaviour:
     Grid:
       x: 1
       y: 1
+    Seed: 252541
 --- !u!1 &1977241131
 GameObject:
   m_ObjectHideFlags: 0
