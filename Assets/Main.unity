@@ -174,14 +174,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 219548318}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.20289277, y: 0.5284609, z: -0.1317601, w: 0.8137585}
+  m_LocalRotation: {x: 0.23819529, y: 0.5222106, z: -0.15468583, w: 0.8041339}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2116485669}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 28, y: 66, z: 0}
+  m_LocalEulerAnglesHint: {x: 33, y: 66, z: 0}
 --- !u!1 &859694036
 GameObject:
   m_ObjectHideFlags: 0
@@ -280,6 +280,152 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   sharedProfile: {fileID: 11400000, guid: 2f75c485b226c9144bdb3bfc44e16de5, type: 2}
+--- !u!1 &1256982708
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1256982711}
+  - component: {fileID: 1256982710}
+  - component: {fileID: 1256982709}
+  m_Layer: 0
+  m_Name: Pillars 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1256982709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256982708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4a446d44d6064c038ab2249a8c59d67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Meshes>k__BackingField:
+  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  <Materials>k__BackingField:
+  - {fileID: 2100000, guid: 22f29903e3f8e3246a76954d9bc0c03b, type: 2}
+  <Time>k__BackingField: 0
+--- !u!114 &1256982710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256982708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9df42e8e13419564092337d96f3c1361, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Config:
+    InstanceCount: 20
+    Extent:
+      x: 3
+      y: 0.2
+      z: 3
+    Scale:
+      x: 0.002
+      y: 0.4
+      z: 0.002
+    Seed: 3892324
+--- !u!4 &1256982711
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256982708}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1273077989
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1273077992}
+  - component: {fileID: 1273077991}
+  - component: {fileID: 1273077990}
+  m_Layer: 0
+  m_Name: Pillars 2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1273077990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273077989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4a446d44d6064c038ab2249a8c59d67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Meshes>k__BackingField:
+  - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  <Materials>k__BackingField:
+  - {fileID: 2100000, guid: cc92ccd0bd64e0f4bbfd381d997366ed, type: 2}
+  <Time>k__BackingField: 0
+--- !u!114 &1273077991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273077989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9df42e8e13419564092337d96f3c1361, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Config:
+    InstanceCount: 20
+    Extent:
+      x: 3
+      y: 0.2
+      z: 3
+    Scale:
+      x: 0.002
+      y: 0.4
+      z: 0.002
+    Seed: 8894122
+--- !u!4 &1273077992
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1273077989}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1295189360
 GameObject:
   m_ObjectHideFlags: 0
@@ -602,7 +748,7 @@ MonoBehaviour:
   <Meshes>k__BackingField:
   - {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   <Materials>k__BackingField:
-  - {fileID: 2100000, guid: e2b36791575ad644fbecd68fc2f9dc95, type: 2}
+  - {fileID: 2100000, guid: f1cfaf4c8ac0ee6439276c2c1cebc9ad, type: 2}
   <Time>k__BackingField: 0
 --- !u!114 &1437881793
 MonoBehaviour:
@@ -621,8 +767,8 @@ MonoBehaviour:
       x: 3
       y: 3
     Level:
-      x: 15
-      y: 20
+      x: 8
+      y: 10
     Height:
       x: 0.0005
       y: 0.003
@@ -639,9 +785,9 @@ MonoBehaviour:
       y: 8
       z: 4
     Grid:
-      x: 1
-      y: 1
-    Seed: 12525432
+      x: 16
+      y: 2
+    Seed: 125432
 --- !u!4 &1437881794
 Transform:
   m_ObjectHideFlags: 0
@@ -917,8 +1063,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1977241134}
-  - component: {fileID: 1977241133}
   - component: {fileID: 1977241132}
+  - component: {fileID: 1977241133}
   m_Layer: 0
   m_Name: Particles
   m_TagString: Untagged
@@ -946,7 +1092,7 @@ MonoBehaviour:
       z: 3
     Scale:
       x: 0.002
-      y: 0.02
+      y: 0.01
       z: 0.002
     Seed: 389
 --- !u!114 &1977241133
@@ -1312,3 +1458,5 @@ SceneRoots:
   - {fileID: 1797900896}
   - {fileID: 1437881794}
   - {fileID: 1977241134}
+  - {fileID: 1256982711}
+  - {fileID: 1273077992}
