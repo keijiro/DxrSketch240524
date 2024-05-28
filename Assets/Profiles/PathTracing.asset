@@ -32,7 +32,7 @@ MonoBehaviour:
     m_Value: 4
   maximumIntensity:
     m_OverrideState: 1
-    m_Value: 10000
+    m_Value: 200
   denoising:
     m_OverrideState: 1
     m_Value: 1
