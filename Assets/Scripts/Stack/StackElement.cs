@@ -19,13 +19,11 @@ public struct StackConfig
     public float3 Height;
     public float3 Pad;
     public float Cutoff;
-    public float Decimate;
-    public float Uniformity;
+    [Range(0, 1)] public float Decimate;
+    [Range(0, 1)] public float Uniformity;
     public int3 Subdivide;
     public int2 Grid;
-    public float Life;
-    public float Fade;
-    public float Delay;
+    public Transition Transition;
     public uint Seed;
 
     public static StackConfig Default()
@@ -39,9 +37,7 @@ public struct StackConfig
              Uniformity = 0.5f,
              Subdivide = math.int3(1, 8, 4),
              Grid = math.int2(1, 1),
-             Life = 2,
-             Fade = 2,
-             Delay = 1,
+             Transition = Transition.Default(),
              Seed = 1 };
 }
 
@@ -213,15 +209,13 @@ public struct StackXformJob : IJobParallelForTransform
         var rand = Random.CreateFromIndex((uint)index ^ Config.Seed);
         rand.NextUInt();
 
-        var time = Time - rand.NextFloat(Config.Delay);
-        var (fade_in, fade_out) =
-          SketchUtils.FadeInOut(Config.Life, Config.Fade, time);
+        var (f_in, f_out) = Config.Transition.FadeInOut(Time, rand.UNorm());
 
         var pos = e.Position.xzy;
-        pos.yz += e.Scale.zy * (fade_in + fade_out - 1);
+        pos.yz += e.Scale.zy * (f_in + f_out - 1);
 
         var scale = e.Scale.xzy;
-        scale.yz *= fade_in - fade_out;
+        scale.yz *= f_in - f_out;
 
         xform.localPosition = math.transform(Parent, pos);
         xform.localRotation = math.rotation(Parent.rs);

@@ -15,9 +15,7 @@ public struct ScatterConfig
     public int InstanceCount;
     public float3 Extent;
     public float3 Scale;
-    public float Life;
-    public float Fade;
-    public float Delay;
+    public Transition Transition;
     public uint Seed;
 
     public static ScatterConfig Default()
@@ -25,9 +23,7 @@ public struct ScatterConfig
            { InstanceCount = 10,
              Extent = math.float3(1, 1, 1),
              Scale = 0.1f,
-             Life = 2,
-             Fade = 2,
-             Delay = 1,
+             Transition = Transition.Default(),
              Seed = 1 };
 }
 
@@ -51,26 +47,17 @@ public struct ScatterXformJob : IJobParallelForTransform
              Parent = SketchUtils.AffineTransform(parent),
              Time = time }.Schedule(xforms);
 
-    static float Pow(float x)
-    {
-        x = x * x;
-        x = x * x;
-        return x * x;
-    }
-
     public void Execute(int index, TransformAccess xform)
     {
         var rand = Random.CreateFromIndex((uint)index ^ Config.Seed);
         rand.NextUInt();
 
-        var time = Time - rand.NextFloat(Config.Delay);
-        var (fade_in, fade_out) =
-          SketchUtils.FadeInOut(Config.Life, Config.Fade, time);
+        var (f_in, f_out) = Config.Transition.FadeInOut(Time, rand.UNorm());
 
         var pos = (rand.NextFloat3() - 0.5f) * Config.Extent;
-        pos.y += Config.Scale.y * (fade_in + fade_out - 1);
+        pos.y += Config.Scale.y * (f_in + f_out - 1);
 
-        var scale = Config.Scale * (fade_in - fade_out);
+        var scale = Config.Scale * (f_in - f_out);
 
         xform.localPosition = math.transform(Parent, pos);
         xform.localRotation = math.rotation(Parent.rs);
