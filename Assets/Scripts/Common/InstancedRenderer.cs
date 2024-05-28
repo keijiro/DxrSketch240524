@@ -54,7 +54,7 @@ public sealed class InstancedRenderer : MonoBehaviour, ITimeControl, IPropertyPr
         _pool.Meshes = Meshes;
         _pool.Materials = Materials;
         _pool.RandomSeed = LayouterComponent.Seed;
-        LayouterComponent.ScheduleJob(transform, _pool.Xforms).Complete();
+        LayouterComponent.ScheduleJob(transform, Time, _pool.Xforms).Complete();
     }
 
     #endregion

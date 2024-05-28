@@ -20,8 +20,9 @@ public sealed class StackLayouter : MonoBehaviour, IInstanceLayouter
     public int InstanceCount => Elements.Length;
     public uint Seed => Config.Seed;
 
-    public JobHandle ScheduleJob(Transform parent, TransformAccessArray xforms)
-      => StackXformJob.Schedule(Config, Elements, parent, xforms);
+    public JobHandle ScheduleJob
+      (Transform parent, float time, TransformAccessArray xforms)
+      => StackXformJob.Schedule(Config, Elements, parent, time, xforms);
 
     #endregion
 

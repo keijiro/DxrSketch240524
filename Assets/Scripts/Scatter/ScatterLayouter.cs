@@ -19,8 +19,9 @@ public sealed class ScatterLayouter : MonoBehaviour, IInstanceLayouter
     public int InstanceCount => Config.InstanceCount;
     public uint Seed => Config.Seed;
 
-    public JobHandle ScheduleJob(Transform parent, TransformAccessArray xforms)
-      => ScatterXformJob.Schedule(Config, parent, xforms);
+    public JobHandle ScheduleJob
+      (Transform parent, float time, TransformAccessArray xforms)
+      => ScatterXformJob.Schedule(Config, parent, time, xforms);
 
     #endregion
 }
