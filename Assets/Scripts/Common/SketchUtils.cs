@@ -24,6 +24,18 @@ public static class SketchUtils
         if (array.IsCreated) array.Dispose();
     }
 
+    public static (float, float) FadeInOut(float life, float fade, float time)
+    {
+        float Pow(float x)
+        {
+            x = x * x;
+            x = x * x;
+            return x * x;
+        }
+        return (1 - Pow(1 - math.saturate(time / fade)),
+                Pow(math.saturate((time - fade - life) / fade)));
+    }
+
     public static float SNorm(ref this Random rand)
       => rand.NextFloat(-0.5f, 0.5f);
 

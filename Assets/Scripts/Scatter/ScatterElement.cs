@@ -15,6 +15,9 @@ public struct ScatterConfig
     public int InstanceCount;
     public float3 Extent;
     public float3 Scale;
+    public float Life;
+    public float Fade;
+    public float Delay;
     public uint Seed;
 
     public static ScatterConfig Default()
@@ -22,6 +25,9 @@ public struct ScatterConfig
            { InstanceCount = 10,
              Extent = math.float3(1, 1, 1),
              Scale = 0.1f,
+             Life = 2,
+             Fade = 2,
+             Delay = 1,
              Seed = 1 };
 }
 
@@ -57,9 +63,9 @@ public struct ScatterXformJob : IJobParallelForTransform
         var rand = Random.CreateFromIndex((uint)index ^ Config.Seed);
         rand.NextUInt();
 
-        var time = Time - rand.NextFloat();
-        var fade_in = 1 - Pow(1 - math.saturate(time));
-        var fade_out = Pow(math.saturate(time - 3));
+        var time = Time - rand.NextFloat(Config.Delay);
+        var (fade_in, fade_out) =
+          SketchUtils.FadeInOut(Config.Life, Config.Fade, time);
 
         var pos = (rand.NextFloat3() - 0.5f) * Config.Extent;
         pos.y += Config.Scale.y * (fade_in + fade_out - 1);

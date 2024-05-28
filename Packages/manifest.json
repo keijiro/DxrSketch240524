@@ -3,7 +3,8 @@
     "com.unity.recorder": "5.1.0",
     "com.unity.render-pipelines.high-definition": "17.0.3",
     "com.unity.rendering.denoising": "1.0.5",
-    "com.unity.timeline": "1.8.6"
+    "com.unity.timeline": "1.8.6",
+    "jp.keijiro.klak.timeline.procedural-motion": "1.0.2"
   },
   "scopedRegistries": [
     {
