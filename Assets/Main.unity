@@ -1668,7 +1668,7 @@ Camera:
   m_projectionMatrixMode: 2
   m_GateFitMode: 1
   m_FOVAxisMode: 0
-  m_Iso: 1200
+  m_Iso: 800
   m_ShutterSpeed: 0.02
   m_Aperture: 0.7
   m_FocusDistance: 0.1
