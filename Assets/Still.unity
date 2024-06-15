@@ -133,7 +133,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &40146937
 Transform:
   m_ObjectHideFlags: 0
@@ -211,14 +211,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 219548318}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.022557605, y: -0.9622502, z: 0.25783423, w: 0.084186114}
+  m_LocalRotation: {x: 0.19134168, y: -0.8001032, z: 0.3314136, w: 0.46193972}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2083187676}
+  - {fileID: 2116485669}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 30, y: -170, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: -120, z: 0}
 --- !u!95 &219548320
 Animator:
   serializedVersion: 7
@@ -436,11 +436,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Config:
-    InstanceCount: 20
+    InstanceCount: 70
     Extent:
-      x: 3
+      x: 5
       y: 0.2
-      z: 3
+      z: 5
     Scale:
       x: 0.002
       y: 0.4
@@ -514,11 +514,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Config:
-    InstanceCount: 20
+    InstanceCount: 70
     Extent:
-      x: 3
+      x: 5
       y: 0.2
-      z: 3
+      z: 5
     Scale:
       x: 0.002
       y: 0.4
@@ -882,8 +882,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Config:
     Extent:
-      x: 3
-      y: 3
+      x: 5
+      y: 5
     Level:
       x: 8
       y: 10
@@ -895,7 +895,7 @@ MonoBehaviour:
       x: 0.0002
       y: 0.008
       z: 4
-    Cutoff: 0.02
+    Cutoff: 0.01
     Decimate: 0.98
     Uniformity: 0
     Subdivide:
@@ -903,14 +903,14 @@ MonoBehaviour:
       y: 8
       z: 4
     Grid:
-      x: 16
-      y: 2
+      x: 32
+      y: 3
     Transition:
       In: 2
       Stay: 1
       Out: 2
       Jitter: 0.5
-    Seed: 125432
+    Seed: 2508642784
 --- !u!4 &1437881794
 Transform:
   m_ObjectHideFlags: 0
@@ -1154,35 +1154,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Config:
     Extent:
-      x: 3
-      y: 3
+      x: 5
+      y: 5
     Level:
-      x: 15
-      y: 20
+      x: 4
+      y: 12
     Height:
       x: 0.005
-      y: 0.06
-      z: 8
+      y: 0.1
+      z: 10
     Pad:
       x: 0.0002
       y: 0.008
       z: 4
-    Cutoff: 0.012
+    Cutoff: 0.01
     Decimate: 0
     Uniformity: 0.5
     Subdivide:
-      x: 1
+      x: 2
       y: 8
       z: 4
     Grid:
-      x: 1
-      y: 1
+      x: 4
+      y: 4
     Transition:
       In: 2
       Stay: 1
       Out: 2
       Jitter: 0.5
-    Seed: 252541
+    Seed: 766555
 --- !u!1 &1977241131
 GameObject:
   m_ObjectHideFlags: 0
@@ -1214,14 +1214,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Config:
-    InstanceCount: 200
+    InstanceCount: 800
     Extent:
-      x: 3
-      y: 0
-      z: 3
+      x: 5
+      y: 0.1
+      z: 5
     Scale:
       x: 0.002
-      y: 0.01
+      y: 0.006
       z: 0.002
     Transition:
       In: 2
@@ -1359,38 +1359,6 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   sharedProfile: {fileID: 11400000, guid: dfc80cf843bd1e04994918ff702b833d, type: 2}
---- !u!1 &2083187675
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2083187676}
-  m_Layer: 0
-  m_Name: Jitter
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2083187676
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2083187675}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2116485669}
-  m_Father: {fileID: 219548319}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2116485665
 GameObject:
   m_ObjectHideFlags: 0
@@ -1613,7 +1581,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2083187676}
+  m_Father: {fileID: 219548319}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &2116485670
 Animator:
